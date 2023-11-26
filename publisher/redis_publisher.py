@@ -1,7 +1,7 @@
 import redis
 
 
-class Publisher:
+class RedisPublisher:
     def __init__(self, host='localhost', port=6379):
         self.redis = redis.Redis(host=host, port=port)
 

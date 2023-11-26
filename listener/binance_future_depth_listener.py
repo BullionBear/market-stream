@@ -36,8 +36,8 @@ class BinanceFutureDepthListener(MarketListener):
 
     async def run(self, callback, *args, **kwargs):
         def wrapper(message,  *wrapper_args, **wrapper_kwargs):
-            if self._helper(message):
-                callback(message, *wrapper_args, **wrapper_kwargs)
+            self._helper(message)
+            callback(message, *wrapper_args, **wrapper_kwargs)
 
         await super().run(wrapper, *args, **kwargs)
 
