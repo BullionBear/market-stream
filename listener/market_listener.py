@@ -2,21 +2,26 @@ import asyncio
 import websockets
 import json
 
+from helper import get_logger
+
+
 class MarketListener:
     def __init__(self, uri):
         self.uri = uri
         self.queue = asyncio.Queue()
         self.connected = False
         self.ws = None
+        self.logger = get_logger(__name__)
 
     async def _listen(self, ws, callback, *args, **kwargs):
         self.connected = True
         try:
             while self.connected:
                 message = await ws.recv()
+                message = json.loads(message)
                 callback(message, *args, **kwargs)
         except websockets.exceptions.ConnectionClosed:
-            pass
+            self.logger.warning("Websocket connection closed")
         finally:
             self.connected = False
 
@@ -36,6 +41,7 @@ class MarketListener:
                 break
 
     async def send(self, request):
+        self.logger.info(f"Put {request} to queue")
         await self.queue.put(json.dumps(request))
 
     async def run(self, callback, *args, **kwargs):
@@ -48,6 +54,7 @@ class MarketListener:
 
     async def disconnect(self):
         if self.connected:
+            self.logger.info(f"Disconnecting Websocket")
             self.connected = False
             await self.ws.close()
             await self.queue.put(None)  # Signal the send task to stop
