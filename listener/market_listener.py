@@ -7,7 +7,7 @@ class MarketListener:
         self.uri = uri
         self.queue = asyncio.Queue()
         self.connected = False
-        self.ws = None  # WebSocket connection object
+        self.ws = None
 
     async def _listen(self, ws, callback, *args, **kwargs):
         self.connected = True
@@ -23,9 +23,17 @@ class MarketListener:
     async def _send(self, ws):
         while self.connected:
             message = await self.queue.get()
-            if message is None:  # None message as a signal to stop
+            if message is None:
                 break
             await ws.send(message)
+
+    async def _heartbeat(self, ws):
+        while self.connected:
+            try:
+                await ws.ping()
+                await asyncio.sleep(30)  # Send a ping every 30 seconds
+            except websockets.exceptions.ConnectionClosed:
+                break
 
     async def send(self, request):
         await self.queue.put(json.dumps(request))
@@ -35,7 +43,8 @@ class MarketListener:
             self.ws = ws
             websocket_task = asyncio.create_task(self._listen(ws, callback, *args, **kwargs))
             send_task = asyncio.create_task(self._send(ws))
-            await asyncio.gather(websocket_task, send_task)
+            heartbeat_task = asyncio.create_task(self._heartbeat(ws))
+            await asyncio.gather(websocket_task, send_task, heartbeat_task)
 
     async def disconnect(self):
         if self.connected:
