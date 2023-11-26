@@ -1,2 +1,4 @@
 websockets
 redis
+grpcio-tools
+grpcio
