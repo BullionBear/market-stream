@@ -1,0 +1,14 @@
+# Python
+__pycache__
+.DS_Store
+
+# venv
+venv/
+
+# Project
+*/log/
+log/
+data/
+
+# Pycharm
+.idea
