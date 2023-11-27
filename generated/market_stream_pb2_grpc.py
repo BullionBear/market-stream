@@ -6,7 +6,7 @@ from . import market_stream_pb2 as market__stream__pb2
 
 
 class MarketStreamStub(object):
-    """Missing associated documentation comment in .protoc file."""
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -32,22 +32,22 @@ class MarketStreamStub(object):
 
 
 class MarketStreamServicer(object):
-    """Missing associated documentation comment in .protoc file."""
+    """Missing associated documentation comment in .proto file."""
 
     def GetStatus(self, request, context):
-        """Missing associated documentation comment in .protoc file."""
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Subscribe(self, request, context):
-        """Missing associated documentation comment in .protoc file."""
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def Unsubscribe(self, request, context):
-        """Missing associated documentation comment in .protoc file."""
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -78,7 +78,7 @@ def add_MarketStreamServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class MarketStream(object):
-    """Missing associated documentation comment in .protoc file."""
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def GetStatus(request,
