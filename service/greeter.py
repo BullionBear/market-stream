@@ -1,3 +1,4 @@
+import signal
 import grpc
 import asyncio
 from concurrent import futures
@@ -17,7 +18,15 @@ async def serve():
     server.add_insecure_port(listen_addr)
     print(f'Starting server on {listen_addr}')
     await server.start()
-    await server.wait_for_termination()
+    # Setup graceful shutdown
+    loop = asyncio.get_running_loop()
+
+    stop = loop.create_future()
+    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+    loop.add_signal_handler(signal.SIGINT, stop.set_result, None)
+
+    await stop
+    await server.stop(30)  # Wait up to 30 seconds for the server to shut down
 
 if __name__ == '__main__':
     asyncio.run(serve())

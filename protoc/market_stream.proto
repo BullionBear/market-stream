@@ -21,6 +21,6 @@ message SubscriptionRequest {
 }
 
 message SubscriptionRely {
-  int32 statue = 1;
+  int32 status = 1;
 }
 

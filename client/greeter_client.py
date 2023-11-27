@@ -15,11 +15,11 @@ class GreeterClient:
             ('grpc.http2.min_ping_interval_without_data_ms', 5000)  # Minimum interval between pings without data
         ]
         self.channel = grpc.aio.insecure_channel(f'{host}:{port}', options=options)
+        self.stub = greeter_pb2_grpc.GreeterStub(self.channel)
 
     async def say_hello(self, name):
-        stub = greeter_pb2_grpc.GreeterStub(self.channel)
         request = greeter_pb2.HelloRequest(name=name)
-        response = await stub.SayHello(request)
+        response = await self.stub.SayHello(request)
         return response.message
 
     async def close(self):

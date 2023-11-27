@@ -15,12 +15,17 @@ class MarketStreamClient:
             ('grpc.http2.min_ping_interval_without_data_ms', 5000)  # Minimum interval between pings without data
         ]
         self.channel = grpc.aio.insecure_channel(f'{host}:{port}', options=options)
+        self.stub = market_stream_pb2_grpc.MarketStreamStub(self.channel)
 
     async def get_status(self):
-        stub = market_stream_pb2_grpc.MarketStreamStub(self.channel)
         request = market_stream_pb2.Empty()
-        response = await stub.GetStatus(request)
+        response = await self.stub.GetStatus(request)
         return response.time
+
+    async def subscribe(self, exchange, base, quote):
+        request = market_stream_pb2.SubscriptionRequest(exchange=exchange, base=base, quote=quote)
+        response = await self.stub.Subscribe(request)
+        return response.status
 
     async def close(self):
         await self.channel.close()

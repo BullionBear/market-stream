@@ -7,41 +7,45 @@ from concurrent import futures
 from generated import market_stream_pb2
 from generated import market_stream_pb2_grpc
 from publisher import RedisPublisher
-from listener import BinanceFutureDepthListener
+from listener import MarketListener, BinanceFutureDepthListener
 
 
 class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
 
     def __init__(self, publisher):
-        self.listeners = {
+        self.listeners: dict[str, MarketListener] = {
             "binancefuture": BinanceFutureDepthListener()
         }
         self.publisher: RedisPublisher = publisher
+        self.queue = asyncio.Queue()
 
     async def GetStatus(self, request, context):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         return market_stream_pb2.ServerTimeReply(time=current_time)
 
     async def Subscribe(self, request, context):
-        if request.exchange not in self.listener:
+        if request.exchange not in self.listeners:
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             context.set_details(f'{request.exchange} is not implemented')
             return market_stream_pb2.ServerTimeReply()
         listener = self.listeners[request.exchange]
-        asyncio.create_task(listener.run(self.message_handler))
+        await listener.subscribe(request.base, request.quote)
+        response = await self.queue.get()
+        return market_stream_pb2.SubscriptionRely(status=response["id"])
 
     async def run(self):
         for ex, listener in self.listeners.items():
             asyncio.create_task(listener.run(lambda msg: self.message_handler(ex, msg)))
 
-    def message_handler(self, exchange, message):
+    async def message_handler(self, exchange, message):
         if exchange == "binancefuture":
-            self.binancefuture_handler(message)
+            await self.binancefuture_handler(message)
         else:
             raise ValueError(f"{exchange} not implemented yet")
 
-    def binancefuture_handler(self, message):
+    async def binancefuture_handler(self, message):
         if "id" in message:
+            await self.queue.put(message)
             return
         data = {
             "id": message["E"],
@@ -52,6 +56,7 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
             "b": [[float(p), float(v)] for p, v in message["b"]],
             "a": [[float(p), float(v)] for p, v in message["a"]]
         }
+        print(data)
         self.publisher.publish(f"binancefuture@{data['s']}@perp", data)
 
 
