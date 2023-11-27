@@ -4,6 +4,7 @@ from concurrent import futures
 from generated import greeter_pb2
 from generated import greeter_pb2_grpc
 
+
 class GreeterServicer(greeter_pb2_grpc.GreeterServicer):
     async def SayHello(self, request, context):
         return greeter_pb2.HelloReply(message=f'Hello, {request.name}')

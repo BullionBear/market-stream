@@ -11,9 +11,10 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
 
     def __init__(self):
         pass
+
     async def GetStatus(self, request, context):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        return market_stream_pb2_grpc.ServerTimeReply(time=current_time)
+        return market_stream_pb2.ServerTimeReply(time=current_time)
 
 
 async def serve():

@@ -1,9 +1,10 @@
-import asyncio
 import unittest
+import asyncio
 from concurrent import futures
-from datetime import datetime
+from datetime import datetime, timedelta
 import grpc
 from grpc_testing import server_from_dictionary, strict_real_time
+
 from generated import market_stream_pb2
 from generated import market_stream_pb2_grpc
 
@@ -11,34 +12,36 @@ from generated import market_stream_pb2_grpc
 from service.market_stream import MarketStream
 
 
-class MarketStreamTest(unittest.TestCase):
+class MarketStreamTest(unittest.IsolatedAsyncioTestCase):
 
-    def setUp(self):
-        self.servicers = {
-            market_stream_pb2.DESCRIPTOR.services_by_name['MarketStream']: MarketStream()
-        }
-        self.server = server_from_dictionary(self.servicers, strict_real_time())
+    async def asyncSetUp(self):
+        # Create a test server
+        self.server = grpc.aio.server()
+        market_stream_pb2_grpc.add_MarketStreamServicer_to_server(MarketStream(), self.server)
 
-    def tearDown(self):
-        pass
+        # Start the server
+        self.server_port = self.server.add_insecure_port('localhost:0')
+        await self.server.start()
 
-    def test_get_status(self):
-        method_descriptor = market_stream_pb2.DESCRIPTOR.services_by_name['MarketStream'].methods_by_name[
-            'GetStatus']
-        call = self.server.invoke_unary_unary(
-            method_descriptor,
-            (),
-            market_stream_pb2.Empty(),
-            None
-        )
+        # Create a channel to the server
+        self.channel = grpc.aio.insecure_channel('localhost:' + str(self.server_port))
 
-        response = asyncio.get_event_loop().run_until_complete(call)
-        self.assertIsNotNone(response.time, "Time should not be None")
-        # Additional assertions can be added here
+    async def asyncTearDown(self):
+        await self.server.stop(None)
 
-if __name__ == '__main__':
-    unittest.main()
+    async def test_get_status(self):
+        # Create a stub (client)
+        stub = market_stream_pb2_grpc.MarketStreamStub(self.channel)
 
+        # Send a request and wait for the response
+        response = await stub.GetStatus(market_stream_pb2.Empty())
+
+        # current time
+        print(response.time)
+        system_time = datetime.strptime(response.time, "%Y-%m-%d %H:%M:%S")
+        current_time = datetime.now()
+        # Check the response
+        self.assertTrue(current_time - system_time < timedelta(seconds=1))
 
 
 if __name__ == '__main__':
