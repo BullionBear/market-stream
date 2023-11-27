@@ -58,3 +58,9 @@ class MarketListener:
             self.connected = False
             await self.ws.close()
             await self.queue.put(None)  # Signal the send task to stop
+
+    async def subscribe(self, base, quote):
+        pass
+
+    async def unsubscribe(self, base, quote):
+        pass

@@ -1,1 +1,2 @@
+from .market_listener import MarketListener
 from .binance_future_depth_listener import BinanceFutureDepthListener
