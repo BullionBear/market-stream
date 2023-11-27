@@ -19,7 +19,7 @@ class MarketListener:
             while self.connected:
                 message = await ws.recv()
                 message = json.loads(message)
-                callback(message, *args, **kwargs)
+                await callback(message, *args, **kwargs)
         except websockets.exceptions.ConnectionClosed:
             self.logger.warning("Websocket connection closed")
         finally:

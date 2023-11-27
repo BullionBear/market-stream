@@ -58,7 +58,8 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
 async def serve(redis_host, redis_port):
     server = grpc.aio.server()
     publisher = RedisPublisher(redis_host, redis_port)
-    market_stream = MarketStream()
+    market_stream = MarketStream(publisher)
+    asyncio.create_task(market_stream.run())
     market_stream_pb2_grpc.add_MarketStreamServicer_to_server(market_stream, server)
     server.add_insecure_port('[::]:50051')
     await server.start()

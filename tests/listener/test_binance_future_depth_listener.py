@@ -10,7 +10,7 @@ class TestBinanceFutureDepthListener(unittest.TestCase):
             listener = BinanceFutureDepthListener()
 
             # Define a callback function for incoming messages
-            def message_handler(message):
+            async def message_handler(message):
                 print("Received message:", message)
 
             # Run the listener with the callback function

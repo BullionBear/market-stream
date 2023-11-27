@@ -1,6 +1,7 @@
 import unittest
 import asyncio
 from concurrent import futures
+from publisher import RedisPublisher
 from datetime import datetime, timedelta
 import grpc
 from grpc_testing import server_from_dictionary, strict_real_time
@@ -17,7 +18,8 @@ class MarketStreamTest(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         # Create a test server
         self.server = grpc.aio.server()
-        market_stream_pb2_grpc.add_MarketStreamServicer_to_server(MarketStream(), self.server)
+        publisher = RedisPublisher("localhost", 6379)
+        market_stream_pb2_grpc.add_MarketStreamServicer_to_server(MarketStream(publisher), self.server)
 
         # Start the server
         self.server_port = self.server.add_insecure_port('localhost:0')

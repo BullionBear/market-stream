@@ -38,13 +38,13 @@ class BinanceFutureDepthListener(MarketListener):
         await super().send(request)
 
     async def run(self, callback, *args, **kwargs):
-        def wrapper(message,  *wrapper_args, **wrapper_kwargs):
-            self._helper(message)
-            callback(message, *wrapper_args, **wrapper_kwargs)
+        async def wrapper(message,  *wrapper_args, **wrapper_kwargs):
+            await self._helper(message)
+            await callback(message, *wrapper_args, **wrapper_kwargs)
 
         await super().run(wrapper, *args, **kwargs)
 
-    def _helper(self, message):
+    async def _helper(self, message):
         if "id" in message:
             request_id = message["id"]
             payload = self._requests[request_id]
