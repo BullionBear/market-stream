@@ -28,6 +28,7 @@ class MarketListener:
     async def _send(self, ws):
         while self.connected:
             message = await self.queue.get()
+            self.logger.info(f"Receive and send {message}")
             if message is None:
                 break
             await ws.send(message)
@@ -36,6 +37,7 @@ class MarketListener:
         while self.connected:
             try:
                 await ws.ping()
+                self.logger.debug("Ping!")
                 await asyncio.sleep(30)  # Send a ping every 30 seconds
             except websockets.exceptions.ConnectionClosed:
                 break

@@ -24,7 +24,7 @@ class TestBinanceFutureDepthListener(unittest.TestCase):
             await asyncio.sleep(5)
             await listener.subscribe("LTC", "USDT")
 
-            # Example: Send unsubscription request after some time
+            # Example: Unsubscribe request after some time
             await asyncio.sleep(5)
             await listener.unsubscribe("LTC", "USDT")
 
