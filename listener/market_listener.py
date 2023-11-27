@@ -61,6 +61,9 @@ class MarketListener:
             await self.ws.close()
             await self.queue.put(None)  # Signal the send task to stop
 
+    async def is_connected(self):
+        return self.connected
+
     async def subscribe(self, base, quote):
         pass
 

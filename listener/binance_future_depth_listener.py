@@ -12,6 +12,9 @@ class BinanceFutureDepthListener(MarketListener):
 
         self._requests = dict()
 
+    async def list(self):
+        return list(self.channel)
+
     async def subscribe(self, base, quote):
         symbol = (base + quote).lower()
         request_id = random.randint(1, 2 ** 32)
