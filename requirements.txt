@@ -2,3 +2,4 @@ websockets
 redis
 grpcio-tools
 grpcio
+grpcio-testing
