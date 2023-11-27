@@ -6,7 +6,15 @@ from generated import market_stream_pb2_grpc
 
 class MarketStreamClient:
     def __init__(self, host='localhost', port=50051):
-        self.channel = grpc.aio.insecure_channel(f'{host}:{port}')
+        options = [
+            ('grpc.keepalive_time_ms', 30000),  # Send keepalive ping every 30 seconds
+            ('grpc.keepalive_timeout_ms', 10000),  # Wait 10 seconds for pong response
+            ('grpc.keepalive_permit_without_calls', True),  # Allow keepalive pings when there are no calls
+            ('grpc.http2.min_time_between_pings_ms', 10000),  # Minimum time between pings
+            ('grpc.http2.max_pings_without_data', 0),  # Allow pings without data
+            ('grpc.http2.min_ping_interval_without_data_ms', 5000)  # Minimum interval between pings without data
+        ]
+        self.channel = grpc.aio.insecure_channel(f'{host}:{port}', options=options)
 
     async def get_status(self):
         stub = market_stream_pb2_grpc.MarketStreamStub(self.channel)
