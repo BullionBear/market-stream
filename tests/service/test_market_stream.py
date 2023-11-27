@@ -8,7 +8,7 @@ from generated import market_stream_pb2
 from generated import market_stream_pb2_grpc
 
 # Import your service
-from service.server import MarketStream
+from service.market_stream import MarketStream
 
 
 class MarketStreamTest(unittest.TestCase):
