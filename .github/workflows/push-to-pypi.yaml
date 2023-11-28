@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # or the branch of your choice
+    paths:
+      - 'setup.py'  # Trigger only when setup.py is updated
 
 jobs:
   build-and-publish:
