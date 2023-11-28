@@ -12,3 +12,8 @@ data/
 
 # Pycharm
 .idea
+
+# PyPI
+build/
+dist/
+*.egg-info/
