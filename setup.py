@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='market-stream',
-    version='0.0.4',
+    version='0.0.5',
     description='A centralized market stream manager',
     author='Yi Te',
     author_email='coastq22889@icloud.com',
@@ -11,6 +11,7 @@ setup(
         'websockets',
         'redis',
         'aioredis',
-        'grpcio'
+        'grpcio',
+        'grpcio-tools'
     ],
 )
