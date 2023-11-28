@@ -4,3 +4,4 @@ aioredis
 grpcio-tools
 grpcio
 grpcio-testing
+twine
