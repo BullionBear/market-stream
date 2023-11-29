@@ -18,8 +18,6 @@ password: <token>
 
 ## TODO
 - Remove client to another repo
-- Implement a GO version
+- Implement a GO version client
 - Print status for recording symbol (*)
 - Connection retry (**)
-- Auto push Docker image to DockerHub (*)
-- 
