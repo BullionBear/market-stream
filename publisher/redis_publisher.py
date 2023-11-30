@@ -25,7 +25,10 @@ class AsyncRedisPublisher:
             await self.connect()
         await self.redis.publish(channel, message)
 
-    async def close(self):
+    async def disconnect(self):
         if self.redis:
-            self.redis.close()
-            await self.redis.wait_closed()
+            await self.redis.close()
+            self.redis = None
+
+    def is_connect(self):
+        return self.redis is not None

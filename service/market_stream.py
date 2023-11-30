@@ -83,6 +83,7 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
 async def serve(redis_host, redis_port):
     server = grpc.aio.server()
     publisher = AsyncRedisPublisher(redis_host, redis_port)
+    await publisher.connect()
     market_stream = MarketStream(publisher)
     asyncio.create_task(market_stream.run())
     market_stream_pb2_grpc.add_MarketStreamServicer_to_server(market_stream, server)
@@ -95,6 +96,9 @@ async def serve(redis_host, redis_port):
     loop.add_signal_handler(signal.SIGINT, stop.set_result, None)
 
     await stop
+    # Call disconnect before stopping the server
+    await market_stream.disconnect()
+    await publisher.disconnect()
     await server.stop(30)
 
 

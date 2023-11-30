@@ -60,8 +60,5 @@ class BinanceFutureDepthListener(MarketListener):
         return True
 
     async def disconnect(self):
-        for symbol in self.channel:
-            base = symbol[:-4]
-            await self.unsubscribe(base, "USDT")
         await super().disconnect()
 
