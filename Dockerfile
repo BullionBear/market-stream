@@ -17,4 +17,4 @@ ENV PYTHONPATH=/market-stream
 EXPOSE 50051
 
 # Run the gRPC server when the container launches
-CMD ["python", "service/market_stream.py"]
+CMD ["python", "main.py"]
