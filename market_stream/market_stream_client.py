@@ -50,6 +50,8 @@ async def main():
     print(response)
     response = await client.subscribe('binancefuture', "BTC", "USDT")
     print(response)
+    # response = await client.unsubscribe('binancefuture', "BTC", "USDT")
+    # print(response)
     await client.close()
 
 if __name__ == '__main__':

@@ -47,11 +47,15 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
         listener = self.listeners[request.exchange]
         await listener.unsubscribe(request.base, request.quote)
         response = await self.queue.get()
-        return market_stream_pb2.UnsubscriptionRely(status=response["id"])
+        return market_stream_pb2.SubscriptionRely(status=response["id"])
 
     async def run(self):
         for ex, listener in self.listeners.items():
             asyncio.create_task(listener.run(lambda msg: self.message_handler(ex, msg)))
+
+    async def disconnect(self):
+        for ex, listener in self.listeners.items():
+            await listener.disconnect()
 
     async def message_handler(self, exchange, message):
         if exchange == "binancefuture":
@@ -72,13 +76,14 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
             "b": [[float(p), float(v)] for p, v in message["b"]],
             "a": [[float(p), float(v)] for p, v in message["a"]]
         }
-        self.logger.debug(f"{data=}")
+        self.logger.info(f"Publish {json.dumps(data)} to channel")
         await self.publisher.publish(f"binancefuture@{data['s']}@perp", json.dumps(data))
 
 
 async def serve(redis_host, redis_port):
     server = grpc.aio.server()
     publisher = AsyncRedisPublisher(redis_host, redis_port)
+    await publisher.connect()
     market_stream = MarketStream(publisher)
     asyncio.create_task(market_stream.run())
     market_stream_pb2_grpc.add_MarketStreamServicer_to_server(market_stream, server)
@@ -86,12 +91,14 @@ async def serve(redis_host, redis_port):
     await server.start()
     # Setup graceful shutdown
     loop = asyncio.get_running_loop()
-
     stop = loop.create_future()
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
     loop.add_signal_handler(signal.SIGINT, stop.set_result, None)
 
     await stop
+    # Call disconnect before stopping the server
+    await market_stream.disconnect()
+    await publisher.disconnect()
     await server.stop(30)
 
 

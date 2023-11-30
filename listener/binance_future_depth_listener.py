@@ -17,7 +17,7 @@ class BinanceFutureDepthListener(MarketListener):
 
     async def subscribe(self, base, quote):
         symbol = (base + quote).lower()
-        request_id = random.randint(1, 2 ** 32)
+        request_id = random.randint(1, 2 ** 32 - 1)
         request = {
             "method": "SUBSCRIBE",
             "params": [f"{symbol}@depth5@100ms"],
@@ -58,4 +58,7 @@ class BinanceFutureDepthListener(MarketListener):
             del self._requests[request_id]
             return False
         return True
+
+    async def disconnect(self):
+        await super().disconnect()
 
