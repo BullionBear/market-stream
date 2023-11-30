@@ -47,7 +47,7 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
         listener = self.listeners[request.exchange]
         await listener.unsubscribe(request.base, request.quote)
         response = await self.queue.get()
-        return market_stream_pb2.UnsubscriptionRely(status=response["id"])
+        return market_stream_pb2.SubscriptionRely(status=response["id"])
 
     async def run(self):
         for ex, listener in self.listeners.items():
@@ -72,8 +72,8 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
             "b": [[float(p), float(v)] for p, v in message["b"]],
             "a": [[float(p), float(v)] for p, v in message["a"]]
         }
-        self.logger.debug(f"{data=}")
-        await self.publisher.publish(f"binancefuture@{data['s']}@perp", json.dumps(data))
+        self.logger.info(f"Publish {json.dumps(data)} to channel")
+        await self.publisher.publish("binancefuture@btcusdt@perp", json.dumps(data))
 
 
 async def serve(redis_host, redis_port):

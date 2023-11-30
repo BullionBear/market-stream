@@ -48,7 +48,9 @@ async def main():
     client = MarketStreamClient()
     response = await client.get_status()
     print(response)
-    response = await client.subscribe('binancefuture', "BTC", "USDT")
+    # response = await client.subscribe('binancefuture', "BTC", "USDT")
+    # print(response)
+    response = await client.unsubscribe('binancefuture', "BTC", "USDT")
     print(response)
     await client.close()
 
