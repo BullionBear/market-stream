@@ -53,6 +53,10 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
         for ex, listener in self.listeners.items():
             asyncio.create_task(listener.run(lambda msg: self.message_handler(ex, msg)))
 
+    async def disconnect(self):
+        for ex, listener in self.listeners.items():
+            await listener.disconnect()
+
     async def message_handler(self, exchange, message):
         if exchange == "binancefuture":
             await self.binancefuture_handler(message)
@@ -86,7 +90,6 @@ async def serve(redis_host, redis_port):
     await server.start()
     # Setup graceful shutdown
     loop = asyncio.get_running_loop()
-
     stop = loop.create_future()
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
     loop.add_signal_handler(signal.SIGINT, stop.set_result, None)
