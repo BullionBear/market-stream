@@ -77,7 +77,7 @@ class MarketStream(market_stream_pb2_grpc.MarketStreamServicer):
             "a": [[float(p), float(v)] for p, v in message["a"]]
         }
         self.logger.info(f"Publish {json.dumps(data)} to channel")
-        await self.publisher.publish("binancefuture@btcusdt@perp", json.dumps(data))
+        await self.publisher.publish(f"binancefuture@{data['s']}@perp", json.dumps(data))
 
 
 async def serve(redis_host, redis_port):
