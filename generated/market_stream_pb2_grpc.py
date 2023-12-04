@@ -17,7 +17,7 @@ class MarketStreamStub(object):
         self.GetStatus = channel.unary_unary(
                 '/market_stream.MarketStream/GetStatus',
                 request_serializer=market__stream__pb2.Empty.SerializeToString,
-                response_deserializer=market__stream__pb2.ServerTimeReply.FromString,
+                response_deserializer=market__stream__pb2.StatusReply.FromString,
                 )
         self.Subscribe = channel.unary_unary(
                 '/market_stream.MarketStream/Subscribe',
@@ -58,7 +58,7 @@ def add_MarketStreamServicer_to_server(servicer, server):
             'GetStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.GetStatus,
                     request_deserializer=market__stream__pb2.Empty.FromString,
-                    response_serializer=market__stream__pb2.ServerTimeReply.SerializeToString,
+                    response_serializer=market__stream__pb2.StatusReply.SerializeToString,
             ),
             'Subscribe': grpc.unary_unary_rpc_method_handler(
                     servicer.Subscribe,
@@ -93,7 +93,7 @@ class MarketStream(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/market_stream.MarketStream/GetStatus',
             market__stream__pb2.Empty.SerializeToString,
-            market__stream__pb2.ServerTimeReply.FromString,
+            market__stream__pb2.StatusReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

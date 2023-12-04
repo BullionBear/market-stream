@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='market-stream',
-    version='0.0.5',
+    version='0.1.0',
     description='A centralized market stream manager',
     author='Yi Te',
     author_email='coastq22889@icloud.com',

@@ -5,6 +5,7 @@ from generated import market_stream_pb2_grpc
 
 from helper import get_logger
 
+
 class MarketStreamClient:
     def __init__(self, host='localhost', port=50051):
         self.channel = grpc.aio.insecure_channel(f'{host}:{port}')

@@ -3,21 +3,23 @@ syntax = "proto3";
 package market_stream;
 
 service MarketStream {
-  rpc GetStatus (Empty) returns (ServerTimeReply) {}
+  rpc GetStatus (Empty) returns (StatusReply) {}
   rpc Subscribe (SubscriptionRequest) returns (SubscriptionRely) {}
   rpc Unsubscribe (SubscriptionRequest) returns (SubscriptionRely) {}
 }
 
 message Empty {}
 
-message ServerTimeReply {
+message StatusReply {
   string time = 1;
+  repeated SubscriptionRequest subscription = 2;
 }
 
 message SubscriptionRequest {
   string exchange = 1;
   string base = 2;
   string quote = 3;
+  string instrument = 4;
 }
 
 message SubscriptionRely {

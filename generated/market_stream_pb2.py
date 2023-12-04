@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13market_stream.proto\x12\rmarket_stream\"\x07\n\x05\x45mpty\"\x1f\n\x0fServerTimeReply\x12\x0c\n\x04time\x18\x01 \x01(\t\"D\n\x13SubscriptionRequest\x12\x10\n\x08\x65xchange\x18\x01 \x01(\t\x12\x0c\n\x04\x62\x61se\x18\x02 \x01(\t\x12\r\n\x05quote\x18\x03 \x01(\t\"\"\n\x10SubscriptionRely\x12\x0e\n\x06status\x18\x01 \x01(\x03\x32\xfd\x01\n\x0cMarketStream\x12\x43\n\tGetStatus\x12\x14.market_stream.Empty\x1a\x1e.market_stream.ServerTimeReply\"\x00\x12R\n\tSubscribe\x12\".market_stream.SubscriptionRequest\x1a\x1f.market_stream.SubscriptionRely\"\x00\x12T\n\x0bUnsubscribe\x12\".market_stream.SubscriptionRequest\x1a\x1f.market_stream.SubscriptionRely\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13market_stream.proto\x12\rmarket_stream\"\x07\n\x05\x45mpty\"U\n\x0bStatusReply\x12\x0c\n\x04time\x18\x01 \x01(\t\x12\x38\n\x0csubscription\x18\x02 \x03(\x0b\x32\".market_stream.SubscriptionRequest\"X\n\x13SubscriptionRequest\x12\x10\n\x08\x65xchange\x18\x01 \x01(\t\x12\x0c\n\x04\x62\x61se\x18\x02 \x01(\t\x12\r\n\x05quote\x18\x03 \x01(\t\x12\x12\n\ninstrument\x18\x04 \x01(\t\"\"\n\x10SubscriptionRely\x12\x0e\n\x06status\x18\x01 \x01(\x03\x32\xf9\x01\n\x0cMarketStream\x12?\n\tGetStatus\x12\x14.market_stream.Empty\x1a\x1a.market_stream.StatusReply\"\x00\x12R\n\tSubscribe\x12\".market_stream.SubscriptionRequest\x1a\x1f.market_stream.SubscriptionRely\"\x00\x12T\n\x0bUnsubscribe\x12\".market_stream.SubscriptionRequest\x1a\x1f.market_stream.SubscriptionRely\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,12 +22,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_EMPTY']._serialized_start=38
   _globals['_EMPTY']._serialized_end=45
-  _globals['_SERVERTIMEREPLY']._serialized_start=47
-  _globals['_SERVERTIMEREPLY']._serialized_end=78
-  _globals['_SUBSCRIPTIONREQUEST']._serialized_start=80
-  _globals['_SUBSCRIPTIONREQUEST']._serialized_end=148
-  _globals['_SUBSCRIPTIONRELY']._serialized_start=150
-  _globals['_SUBSCRIPTIONRELY']._serialized_end=184
-  _globals['_MARKETSTREAM']._serialized_start=187
-  _globals['_MARKETSTREAM']._serialized_end=440
+  _globals['_STATUSREPLY']._serialized_start=47
+  _globals['_STATUSREPLY']._serialized_end=132
+  _globals['_SUBSCRIPTIONREQUEST']._serialized_start=134
+  _globals['_SUBSCRIPTIONREQUEST']._serialized_end=222
+  _globals['_SUBSCRIPTIONRELY']._serialized_start=224
+  _globals['_SUBSCRIPTIONRELY']._serialized_end=258
+  _globals['_MARKETSTREAM']._serialized_start=261
+  _globals['_MARKETSTREAM']._serialized_end=510
 # @@protoc_insertion_point(module_scope)
